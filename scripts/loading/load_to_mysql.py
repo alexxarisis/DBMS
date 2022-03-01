@@ -36,7 +36,7 @@ def create_table(cursor):
 
 def load_csv(cursor):
     print('Loading files...', end=' ')
-    #cursor.execute('SET GLOBAL local_infile=\'ON\';')
+    cursor.execute('SET GLOBAL local_infile=\'ON\';')
 
     load_query = "LOAD DATA LOCAL INFILE '"  + filename + """'
         INTO TABLE data
@@ -44,6 +44,7 @@ def load_csv(cursor):
         OPTIONALLY ENCLOSED BY '"'
         IGNORE 1 LINES
     """
+    
     cursor.execute(load_query)
     print('Done')
 
@@ -64,9 +65,9 @@ def connect_to_mysql():
                 connection.commit()
                 print('Completed')
 
-                cursor.execute('SELECT * FROM data')
-                for row in list(cursor.fetchall()):
-                    print(row)
+                #cursor.execute('SELECT * FROM data')
+                #for row in list(cursor.fetchall()):
+                #    print(row)
     except Error as e:
         connection.close()
 
