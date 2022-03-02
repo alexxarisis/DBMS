@@ -3,6 +3,7 @@ from mysql.connector import connect, Error
 #from getpass import getpass
 
 filename = 'final.csv'
+filename2 = 'final_Ind.csv'
 
 def connect_to_database(cursor):
     print('Creating database...', end=' ')
@@ -17,6 +18,13 @@ def get_headers():
         formatted_headers =  [header.replace('.', '_').lower() for header in headers]
         return formatted_headers[4:]
 
+def get_headers2():
+    with open(filename2, newline='') as f:
+        reader = csv.reader(f)
+        headers = next(reader)
+        formatted_headers =  [header.replace('.', '_').lower() for header in headers]
+        return formatted_headers[4:]
+
 def create_table(cursor):
     print('Creating tables...', end=' ')
     create_table_query = '''
@@ -26,8 +34,24 @@ def create_table(cursor):
             country_code VARCHAR(3),
             year YEAR NOT NULL,
             PRIMARY KEY (id, year)'''
+            
 
     for header in get_headers():
+        create_table_query += ', \n' + header + ' DOUBLE'
+    create_table_query += ')'
+
+    cursor.execute(create_table_query)
+    create_table_query = '''
+        CREATE TABLE IF NOT EXISTS indicators(
+            country_code VARCHAR(3),
+            indicator_code VARCHAR(32),
+            indicator_name VARCHAR(70),
+            source_note VARCHAR(130),
+            source_org VARCHAR(32),
+            PRIMARY KEY indicator_code'''
+            
+
+    for header in get_headers2():
         create_table_query += ', \n' + header + ' DOUBLE'
     create_table_query += ')'
 
@@ -40,6 +64,14 @@ def load_csv(cursor):
 
     load_query = "LOAD DATA LOCAL INFILE '"  + filename + """'
         INTO TABLE data
+        FIELDS TERMINATED BY ','
+        OPTIONALLY ENCLOSED BY '"'
+        IGNORE 1 LINES
+    """
+    
+    cursor.execute(load_query)
+    load_query = "LOAD DATA LOCAL INFILE '"  + filename2 + """'
+        INTO TABLE indicators
         FIELDS TERMINATED BY ','
         OPTIONALLY ENCLOSED BY '"'
         IGNORE 1 LINES

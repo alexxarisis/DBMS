@@ -6,6 +6,15 @@ class Country:
     def __init__(self, name, code):
         self.name = name
         self.code = code
+class Indicator:
+    def __init__(self,cCode,iCode,iName,srcNote,srcOrg):
+        self.cCode=cCode #country code
+        self.iCode=iCode #indicator code
+        self.iName=iName #indicator name
+        self.srcNote=srcNote 
+        self.srcOrg=srcOrg
+
+        
 
 def format_dataframe(df):
     # Invert dataframe and drop unnessecary columns
