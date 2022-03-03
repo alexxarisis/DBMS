@@ -15,7 +15,7 @@ class Indicator:
 
 
 def create_final_csv():
-    data_filepath = 'C:\\Users\\alexx\\Desktop\\DBMS\\csvs\\indicators\\'
+    data_filepath = 'C:\\Users\\verpc\\Desktop\\DBMS\\csvs\\indicators\\'
     final_df = pd.DataFrame()
     
 
@@ -24,8 +24,8 @@ def create_final_csv():
         filenameSplit=filename.split("_")
         cCode=filenameSplit[3]
         ind = Indicator(cCode,df.loc[0][0], df.loc[0][1],df.loc[0][2], df.loc[0][3])
-
-        df.insert(0,"Country Code",[len(df.index)*cCode])
+        
+        df.insert(0,"Country Code",[cCode for i in range(0, len(df.index))])
         print(df)
         final_df = pd.concat([final_df, df])
 
