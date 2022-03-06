@@ -1,23 +1,11 @@
 import csv
 from mysql.connector import connect, Error
-from os import getcwd
 from os.path import join
-from pathlib import Path
 
-# Must be with '/' and NOT '\' for the sql statement
-inputs_dir = ''
-
-countries_csv = 'countries.csv'
-stats_csv = 'stats.csv'
-indicators_csv = 'indicators.csv'
-
-def initialize_variables():
-    global inputs_dir
-    
-    # Get to csvs directory
-    current_path = Path(getcwd())
-    csvs_path = join(current_path.parent.parent.absolute(), 'csvs')
-    inputs_dir = join(csvs_path, 'final')
+from loading_variables import final_csvs_dir
+from loading_variables import countries_csv
+from loading_variables import stats_csv
+from loading_variables import indicators_csv
 
 def connect_to_database(cursor):
     cursor.execute('DROP DATABASE dbms')
@@ -27,7 +15,7 @@ def connect_to_database(cursor):
     print('Done')
 
 def get_headers():
-    with open(join(inputs_dir, stats_csv), newline='') as f:
+    with open(join(final_csvs_dir, stats_csv), newline='') as f:
         reader = csv.reader(f)
         headers = next(reader)
         formatted_headers =  [header.replace('.', '_').lower() for header in headers]
@@ -85,7 +73,7 @@ def create_load_query(csv_file, table_name):
             OPTIONALLY ENCLOSED BY '"'
             LINES TERMINATED BY '\r\n'
             IGNORE 1 LINES
-        """ % (join(inputs_dir, csv_file).replace('\\', '/'), table_name)
+        """ % (join(final_csvs_dir, csv_file).replace('\\', '/'), table_name)
 
 def load_csvs(cursor):
     print('Loading files...', end=' ')
@@ -98,8 +86,6 @@ def load_csvs(cursor):
     print('Done')
 
 def load_files_to_mysql():
-    initialize_variables()
-
     try:
         with connect(
             host = 'localhost',
@@ -114,8 +100,8 @@ def load_files_to_mysql():
                 connection.commit()
                 print('Completed.')
 
-                #cursor.execute('SELECT country_id FROM Countries')
-                #print(cursor.fetchall())
+                cursor.execute('SELECT country_id FROM Countries')
+                print(cursor.fetchall())
                 connection.close()
     except Error as e:
         print(e)

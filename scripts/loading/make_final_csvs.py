@@ -1,38 +1,21 @@
 import pandas as pd
-from os import getcwd
 from os import listdir
 from os.path import join
-from pathlib import Path
 
-# Input
-countries_dir = ''
-yearly_stats_dir = ''
-indicators_dir = ''
+from loading_variables import countries_dir
+from loading_variables import yearly_stats_dir
+from loading_variables import indicators_dir
+from loading_variables import final_csvs_dir
 
-# Output
-output_dir = ''
+from loading_variables import countries_csv
+from loading_variables import stats_csv
+from loading_variables import indicators_csv
 
 # {Country Code: ID} dictionary
 countryIDs = None
 
-def initialize_variables():
-    global countries_dir
-    global yearly_stats_dir
-    global indicators_dir
-    global output_dir
-
-    # Get to csvs directory
-    current_path = Path(getcwd())
-    csvs_path = join(current_path.parent.parent.absolute(), 'csvs')
-
-    countries_dir = join(csvs_path, 'countries')
-    yearly_stats_dir = join(csvs_path, 'stats')
-    indicators_dir = join(csvs_path, 'indicators')
-
-    output_dir = join(csvs_path, 'final')
-
 def export_to_csv(df, output_file_name):
-    df.to_csv(join(output_dir, output_file_name + '.csv'), na_rep='NULL', index = False)
+    df.to_csv(join(final_csvs_dir, output_file_name), na_rep='NULL', index = False)
 
 def create_countries_csv():
     global countryIDs
@@ -48,8 +31,9 @@ def create_countries_csv():
     final_df = final_df.reset_index(drop=True)
     final_df.insert(0, 'Country ID', final_df.index)
     
-    export_to_csv(final_df, 'countries')
+    export_to_csv(final_df, countries_csv)
 
+    # Also...
     # Fill dict with {country-id} values
     countryIDs = dict(zip(final_df['Country Code'], final_df['Country ID']))
 
@@ -85,7 +69,7 @@ def create_yearly_stats_csv():
         
         final_df = pd.concat([final_df, df])
 
-    export_to_csv(final_df, 'stats')
+    export_to_csv(final_df, stats_csv)
 
 def create_indicators_csv():
     final_df = pd.DataFrame()
@@ -100,12 +84,11 @@ def create_indicators_csv():
     final_df = final_df.reset_index()
     final_df = final_df.rename(columns={'index': 'Indicator ID'})
     
-    export_to_csv(final_df, 'indicators')
+    export_to_csv(final_df, indicators_csv)
 
 def create_csvs():
     print('Creating csv\'s...', end=" ")
 
-    initialize_variables()
     create_countries_csv()
     create_yearly_stats_csv()
     create_indicators_csv()
