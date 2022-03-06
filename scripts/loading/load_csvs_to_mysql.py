@@ -45,7 +45,7 @@ def create_tables(cursor):
         '''
 
     for header in get_headers():
-        create_stats_table_query += ', \n' + header + ' DOUBLE'
+        create_stats_table_query += ',\n %s DOUBLE' % (header)
     create_stats_table_query += ')'
 
     create_indicator_table_query = '''
@@ -100,8 +100,8 @@ def load_files_to_mysql():
                 connection.commit()
                 print('Completed.')
 
-                cursor.execute('SELECT country_id FROM Countries')
-                print(cursor.fetchall())
+                #cursor.execute('SELECT country_id FROM Countries')
+                #print(cursor.fetchall())
                 connection.close()
     except Error as e:
         print(e)
