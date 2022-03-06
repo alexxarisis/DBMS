@@ -1,12 +1,23 @@
 import csv
 from mysql.connector import connect, Error
+from os import getcwd
+from os.path import join
+from pathlib import Path
 
 # Must be with '/' and NOT '\' for the sql statement
-csv_dir = 'C:/Users/alexx/Desktop/DBMS/csvs/final/'
+inputs_dir = ''
 
 countries_csv = 'countries.csv'
 stats_csv = 'stats.csv'
 indicators_csv = 'indicators.csv'
+
+def initialize_variables():
+    global inputs_dir
+    
+    # Get to csvs directory
+    current_path = Path(getcwd())
+    csvs_path = join(current_path.parent.parent.absolute(), 'csvs')
+    inputs_dir = join(csvs_path, 'final')
 
 def connect_to_database(cursor):
     cursor.execute('DROP DATABASE dbms')
@@ -16,7 +27,7 @@ def connect_to_database(cursor):
     print('Done')
 
 def get_headers():
-    with open(csv_dir + stats_csv, newline='') as f:
+    with open(join(inputs_dir, stats_csv), newline='') as f:
         reader = csv.reader(f)
         headers = next(reader)
         formatted_headers =  [header.replace('.', '_').lower() for header in headers]
@@ -58,7 +69,7 @@ def create_tables(cursor):
             source_organization TEXT,
             PRIMARY KEY (indicator_id)
         )
-        '''
+    '''
     
     cursor.execute(create_country_table_query)
     cursor.execute(create_stats_table_query)
@@ -66,41 +77,29 @@ def create_tables(cursor):
     
     print('Done')
 
-def load_csv(cursor):
+def create_load_query(csv_file, table_name):
+    return  """
+            LOAD DATA LOCAL INFILE '%s'
+            INTO TABLE %s 
+            FIELDS TERMINATED BY ','
+            OPTIONALLY ENCLOSED BY '"'
+            LINES TERMINATED BY '\r\n'
+            IGNORE 1 LINES
+        """ % (join(inputs_dir, csv_file).replace('\\', '/'), table_name)
+
+def load_csvs(cursor):
     print('Loading files...', end=' ')
     cursor.execute('SET GLOBAL local_infile=\'ON\';')
 
-    load_countries_query = "LOAD DATA LOCAL INFILE '"  + csv_dir + countries_csv + """'
-        INTO TABLE Countries
-        FIELDS TERMINATED BY ','
-        OPTIONALLY ENCLOSED BY '"'
-        LINES TERMINATED BY '\r\n'
-        IGNORE 1 LINES
-    """
-
-    load_stats_query = "LOAD DATA LOCAL INFILE '"  + csv_dir + stats_csv + """'
-        INTO TABLE Stats
-        FIELDS TERMINATED BY ','
-        OPTIONALLY ENCLOSED BY '"'
-        LINES TERMINATED BY '\r\n'
-        IGNORE 1 LINES
-    """
-
-    load_indicators_query = "LOAD DATA LOCAL INFILE '"  + csv_dir + indicators_csv + """'
-        INTO TABLE Indicators
-        FIELDS TERMINATED BY ','
-        OPTIONALLY ENCLOSED BY '"'
-        LINES TERMINATED BY '\r\n'
-        IGNORE 1 LINES
-    """
-    
-    cursor.execute(load_countries_query)
-    cursor.execute(load_stats_query)
-    cursor.execute(load_indicators_query)
+    cursor.execute(create_load_query(countries_csv, 'Countries'))
+    cursor.execute(create_load_query(stats_csv, 'Stats'))
+    cursor.execute(create_load_query(indicators_csv, 'Indicators'))
 
     print('Done')
 
 def load_files_to_mysql():
+    initialize_variables()
+
     try:
         with connect(
             host = 'localhost',
@@ -111,12 +110,12 @@ def load_files_to_mysql():
             with connection.cursor() as cursor:
                 connect_to_database(cursor)
                 create_tables(cursor)
-                load_csv(cursor)
+                load_csvs(cursor)
                 connection.commit()
                 print('Completed.')
 
-                cursor.execute('SELECT indicator_id FROM Indicators')
-                print(cursor.fetchall())
+                #cursor.execute('SELECT country_id FROM Countries')
+                #print(cursor.fetchall())
                 connection.close()
     except Error as e:
         print(e)
