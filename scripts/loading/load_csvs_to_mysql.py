@@ -97,13 +97,12 @@ def load_files_to_mysql():
                 connect_to_database(cursor)
                 create_tables(cursor)
                 load_csvs(cursor)
+
                 connection.commit()
                 print('Completed.')
-
-                #cursor.execute('SELECT country_id FROM Countries')
-                #print(cursor.fetchall())
                 connection.close()
     except Error as e:
         print(e)
+        print("Connection not established.")
 
 load_files_to_mysql()

@@ -1,3 +1,4 @@
+from typing import final
 import pandas as pd
 from os import listdir
 from os.path import join
@@ -80,10 +81,15 @@ def create_indicators_csv():
         final_df = pd.concat([final_df, df])
 
     final_df = final_df.drop_duplicates()
+    final_df = final_df[final_df['INDICATOR_CODE'].str.startswith('FD') | final_df['INDICATOR_CODE'].str.startswith('FI')]
+
     # Make IDs
     final_df = final_df.reset_index()
+    final_df = final_df.drop('index', axis=1)
+    # create new index column from 0 to N
+    final_df = final_df.reset_index()
     final_df = final_df.rename(columns={'index': 'Indicator ID'})
-    
+
     export_to_csv(final_df, indicators_csv)
 
 def create_csvs():
