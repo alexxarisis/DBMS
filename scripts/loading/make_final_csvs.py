@@ -37,8 +37,7 @@ def create_countries_csv():
     # Fill dict with {country-id} values
     countryIDs = dict(zip(final_df['Country Code'], final_df['Country ID']))
 
-def create_yearly_stats_csv():
-    global countryIDs
+def create_stats_csv():
     final_df = pd.DataFrame()
 
     for filename in listdir(yearly_stats_dir):
@@ -80,7 +79,8 @@ def create_indicators_csv():
         final_df = pd.concat([final_df, df])
 
     final_df = final_df.drop_duplicates()
-    final_df = final_df[final_df['INDICATOR_CODE'].str.startswith('FD') | final_df['INDICATOR_CODE'].str.startswith('FI')]
+    final_df = final_df[final_df['INDICATOR_CODE'].str.startswith('FD') | 
+                        final_df['INDICATOR_CODE'].str.startswith('FI') ]
 
     # Make IDs column
     final_df.insert(0, column='Indicator ID', value=list(range(0, len(final_df))))
@@ -91,7 +91,7 @@ def create_csvs():
     print('Creating csv\'s...', end=" ")
 
     create_countries_csv()
-    create_yearly_stats_csv()
+    create_stats_csv()
     create_indicators_csv()
 
     print('Done')
