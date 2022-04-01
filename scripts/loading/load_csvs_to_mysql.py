@@ -1,13 +1,34 @@
 import csv
-from mysql.connector import connect, Error
+import mysql.connector
 from os.path import join
 
-from loading_variables import final_csvs_dir
-from loading_variables import countries_csv
-from loading_variables import stats_csv
-from loading_variables import indicators_csv
+from loading_variables import   final_csvs_dir,     \
+                                countries_csv,      \
+                                stats_csv,          \
+                                indicators_csv
 
-def connect_to_database(cursor):
+cnx = None
+cursor = None
+
+def connect():
+    global cnx
+    global cursor
+    
+    print('Connecting... ', end=' ')
+    try:
+        cnx = mysql.connector.connect( host = '127.0.0.1',
+                            user = 'root', 
+                            password = 'root',
+                            allow_local_infile=True)
+        cursor = cnx.cursor()
+    except mysql.connector.Error as e:
+            print(e)
+            print("Connection not established.")
+    
+    print('Done')
+
+
+def create_database():
     cursor.execute('DROP DATABASE dbms')
     print('Creating database...', end=' ')
     cursor.execute('CREATE DATABASE IF NOT EXISTS dbms')
@@ -21,7 +42,7 @@ def get_headers():
         formatted_headers =  [header.replace('.', '_').lower() for header in headers]
         return formatted_headers[2:]
 
-def create_tables(cursor):
+def create_tables():
     print('Creating tables...', end=' ')
 
     create_country_table_query = '''
@@ -75,7 +96,7 @@ def create_load_query(csv_file, table_name):
             IGNORE 1 LINES
         """ % (join(final_csvs_dir, csv_file).replace('\\', '/'), table_name)
 
-def load_csvs(cursor):
+def load_csvs():
     print('Loading files...', end=' ')
     cursor.execute('SET GLOBAL local_infile=\'ON\';')
 
@@ -85,24 +106,13 @@ def load_csvs(cursor):
 
     print('Done')
 
-def load_files_to_mysql():
-    try:
-        with connect(
-            host = 'localhost',
-            user = 'root',
-            password = 'root',
-            allow_local_infile=True
-        ) as connection:
-            with connection.cursor() as cursor:
-                connect_to_database(cursor)
-                create_tables(cursor)
-                load_csvs(cursor)
+def main():
+    connect()
+    create_database()
+    create_tables()
+    load_csvs()
 
-                connection.commit()
-                print('Completed.')
-                connection.close()
-    except Error as e:
-        print(e)
-        print("Connection not established.")
+    cnx.commit()
+    cnx.close()
 
-load_files_to_mysql()
+main()

@@ -82,12 +82,8 @@ def create_indicators_csv():
     final_df = final_df.drop_duplicates()
     final_df = final_df[final_df['INDICATOR_CODE'].str.startswith('FD') | final_df['INDICATOR_CODE'].str.startswith('FI')]
 
-    # Make IDs
-    final_df = final_df.reset_index()
-    final_df = final_df.drop('index', axis=1)
-    # create new index column from 0 to N
-    final_df = final_df.reset_index()
-    final_df = final_df.rename(columns={'index': 'Indicator ID'})
+    # Make IDs column
+    final_df.insert(0, column='Indicator ID', value=list(range(0, len(final_df))))
 
     export_to_csv(final_df, indicators_csv)
 
