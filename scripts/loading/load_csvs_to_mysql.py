@@ -19,7 +19,7 @@ def get_headers():
         reader = csv.reader(f)
         headers = next(reader)
         formatted_headers =  [header.replace('.', '_').lower() for header in headers]
-        return formatted_headers[4:]
+        return formatted_headers[2:]
 
 def create_tables(cursor):
     print('Creating tables...', end=' ')
