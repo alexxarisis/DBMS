@@ -1,4 +1,4 @@
-from unicodedata import name
+# Third party imports
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -62,3 +62,23 @@ def Scatter2measures(m1 , m2,xname,yname,name):
     plt.xlabel(xname)
     plt.ylabel(yname)
     plt.show()
+
+
+############################
+
+class PlotMaker:
+    def __init__(self):
+        plt.ion()
+
+    def makeTimelinePlot(self, data, years, indicators):
+        plt.figure()
+        for i in data:
+            plt.plot(years, i.values, label=i.name)
+        # dunno
+        # plt.title('\n'.join(indicators), fontsize=8)
+        plt.legend(fontsize=8)
+        # removes scientific scaling
+        plt.ticklabel_format(style='plain')
+        # numbers fit
+        plt.tight_layout()
+        plt.show()

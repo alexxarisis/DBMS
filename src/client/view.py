@@ -1,5 +1,6 @@
 # Standard library imports
 from functools import partial
+from re import search
 
 # Third party imports
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -251,7 +252,14 @@ class ClientView(object):
 
     ## Displaying plots
     def timelinePlotClicked(self):
-        print('timeline')
+        self.engine.makeTimelinePlot(
+                        self.selectedIndicators,
+                        self.selectedCountries,
+                        int(self.fromYearComboBox.currentText()),
+                        int(self.toYearComboBox.currentText()),
+                        int(search(r'\d+', 
+                            self.perYearCombobox.currentText()).group())
+                        )
 
     def barPlotClicked(self):
         print('bar')
@@ -260,4 +268,4 @@ class ClientView(object):
         print('scatter')
 
 if __name__ == "__main__":
-    ui = ClientView()
+    ClientView()

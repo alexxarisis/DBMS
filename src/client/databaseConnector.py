@@ -1,3 +1,4 @@
+# Third party imports
 import mysql.connector
 
 class DatabaseConnector:
@@ -19,44 +20,63 @@ class DatabaseConnector:
                 print(e)
                 print("Connection not established.")
 
+    #### For Gui initialization
     def getIndicators(self):
-        self.__executeQuery("SELECT indicator_name FROM Indicators")
+        self.__executeQuery(
+            "SELECT indicator_name FROM Indicators ORDER BY indicator_name ASC")
         return [ind[0] for ind in self.cursor.fetchall()]
 
     def getCountries(self):
-        self.__executeQuery("SELECT country_name FROM Countries")
+        self.__executeQuery(
+            "SELECT country_name FROM Countries ORDER BY country_name ASC")
         return [ind[0] for ind in self.cursor.fetchall()]
 
     def getYears(self):
-        self.__executeQuery("SELECT DISTINCT year FROM Stats")
+        self.__executeQuery(
+            "SELECT DISTINCT year FROM Stats ORDER BY year ASC")
+        return [ind[0] for ind in self.cursor.fetchall()]
+
+    #### For plots
+    def getYearsInRange(self, fromYear, toYear):
+        self.__executeQuery(
+            "SELECT DISTINCT year FROM Stats WHERE year BETWEEN %s AND %s" 
+            % (fromYear, toYear))
+        return [ind[0] for ind in self.cursor.fetchall()]
+
+    def __getCountryID(self, country_name):
+        self.__executeQuery("SELECT country_id FROM Countries WHERE country_name='%s'" % (country_name))
+        return self.cursor.fetchone()[0]
+
+    def __getIndicatorCode(self, indicator_name):
+        self.__executeQuery("SELECT indicator_code FROM Indicators WHERE indicator_name='%s'" % (indicator_name))
+        return self.cursor.fetchone()[0]
+
+    def getTimelineValues(self, indicatorName, countryName, fromYear, toYear):
+        indicatorCode = self.__getIndicatorCode(indicatorName)
+        countryID = self.__getCountryID(countryName)
+        indicatorCode = indicatorCode.replace('.', '_').lower()
+        #
+        self.__executeQuery("SELECT %s FROM Stats WHERE country_id = %d && year BETWEEN %d AND %d" 
+                            % (indicatorCode, countryID, fromYear, toYear))
         return [ind[0] for ind in self.cursor.fetchall()]
 
     ########################
     ### STILL IN PROGRESS ###
-    def getCountryID(self, country_name):
-        self.__executeQuery("SELECT country_id FROM Countries WHERE country_name='%s'" % (country_name))
-        return self.cursor.fetchone()[0]
+    # bar plot
+    
+    # scatter plot
 
-    def getIndicatorCode(self, indicator_name):
-        self.__executeQuery("SELECT indicator_code FROM Indicators WHERE indicator_name='%s'" % (indicator_name))
-        return self.cursor.fetchone()[0]
-
-    def get_all_years_by_country_indicator_STILLINPROGRESS(self, country_name, indicator_name):
-        country_id = self.getCountryID(country_name)
-        indicator = self.getIndicatorCode(indicator_name)
-        indicator = indicator.replace('.', '_').lower()
-        self.__executeQuery("SELECT Year, %s FROM Stats WHERE country_id='%s'" % (indicator, country_id))
-
-    def get_values_by_country_indicator_STILLINPROGRESS(self, country_name, indicator_name):
-        country_id = self.getCountryID(country_name)
-        indicator = self.getIndicatorCode(indicator_name)
-        indicator = indicator.replace('.', '_').lower()
-        self.__executeQuery("SELECT %s FROM Stats WHERE country_id='%s'" % (indicator, country_id))
-
-
-    ###############################
+    ########################
     def __executeQuery(self, query):
         try:
             self.cursor.execute(query)
         except mysql.connector.Error as e:
             print(e)
+
+if __name__ == '__main__':
+    connector = DatabaseConnector()
+    years = connector.getYearsInRange(1970, 1980)
+    values = connector.getTimelineValues(
+                    'Renewable energy consumption (% of total final energy consumption)',
+                    'Angola', 1990, 2002)
+    print(values)
