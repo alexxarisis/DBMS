@@ -19,8 +19,15 @@ class Engine:
         return self.dbConnector.getYears()
 
     def makeTimelinePlot(self, indicators, countries, fromYear, toYear, perYears):
-        data =  self.dataFormatter.getFormattedData(indicators, countries,
+        data =  self.dataFormatter.getTimelineData(indicators, countries,
                                                         fromYear, toYear)
         years = self.dbConnector.getYearsInRange(fromYear, toYear)
 
         self.plotMaker.makeTimelinePlot(data, years, indicators)
+    
+    def makeScatterPlot(self, indicators, countries, fromYear, toYear):
+        data = self.dataFormatter.getScatterData(indicators, countries,
+                                                        fromYear, toYear)
+        self.plotMaker.makeScatterPlot(data, indicators, countries)
+        
+

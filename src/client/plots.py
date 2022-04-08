@@ -2,6 +2,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+from dataformat import TimelineData, ScatterData
+
 def barChartk(countries,indicator,name,yname):
     y_pos = np.arange(len(countries))
     y_val = []
@@ -32,45 +34,13 @@ def barChartkindk(countries,indicator,name,yname):
     plt.bar(x, y2, bottom=y1, color='y')
     plt.show()
 
-
-def LineChartk(countries,indicator,name,yname,xname):
-    
-  
-    plt.plot(countries, indicator)
-    plt.title(name)
-    plt.xlabel(xname)
-    plt.ylabel(yname)
-    plt.show()
-
-def LineChartkindk(countries,indicator,name,yname,xname):
-    
-    #ftiaksimo
-    plt.plot(countries, indicator)
-    plt.title(name)
-    plt.xlabel(xname)
-    plt.ylabel(yname)
-    plt.show()
-
-def Scatter2measures(m1 , m2,xname,yname,name):
-
-
-    # Simple Scatterplot
-    
-    plt.scatter(m1, m2)
-    plt.rcParams.update({'figure.figsize':(10,8), 'figure.dpi':100})#???????????
-    plt.title(name)
-    plt.xlabel(xname)
-    plt.ylabel(yname)
-    plt.show()
-
-
 ############################
 
 class PlotMaker:
     def __init__(self):
         plt.ion()
 
-    def makeTimelinePlot(self, data, years, indicators):
+    def makeTimelinePlot(self, data:TimelineData, years, indicators):
         plt.figure()
         for i in data:
             plt.plot(years, i.values, label=i.name)
@@ -82,3 +52,18 @@ class PlotMaker:
         # numbers fit
         plt.tight_layout()
         plt.show()
+
+    def makeScatterPlot(self, data:ScatterData, indicators, countries):
+        plt.figure()
+        plt.scatter(data.indicator1, data.indicator2)
+        #plt.rcParams.update({'figure.figsize':(10,8), 'figure.dpi':100})       #???????????
+        plt.xlabel(indicators[0])
+        plt.ylabel(indicators[1])
+        if (len(countries) == 1):
+            plt.title('Correlation of %s' % (countries[0]))
+        else:
+            plt.title('Correlation of all countries')
+        plt.ticklabel_format(style='plain')
+        plt.tight_layout()
+        plt.show()
+

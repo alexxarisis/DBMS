@@ -20,7 +20,7 @@ class DatabaseConnector:
                 print(e)
                 print("Connection not established.")
 
-    #### For Gui initialization
+    #### For Gui initialization ####
     def getIndicators(self):
         self.__executeQuery(
             "SELECT indicator_name FROM Indicators ORDER BY indicator_name ASC")
@@ -36,35 +36,44 @@ class DatabaseConnector:
             "SELECT DISTINCT year FROM Stats ORDER BY year ASC")
         return [ind[0] for ind in self.cursor.fetchall()]
 
-    #### For plots
-    def getYearsInRange(self, fromYear, toYear):
-        self.__executeQuery(
-            "SELECT DISTINCT year FROM Stats WHERE year BETWEEN %s AND %s" 
-            % (fromYear, toYear))
-        return [ind[0] for ind in self.cursor.fetchall()]
-
+    #### For plots ####
     def __getCountryID(self, country_name):
-        self.__executeQuery("SELECT country_id FROM Countries WHERE country_name='%s'" % (country_name))
+        self.__executeQuery(
+            "SELECT country_id FROM Countries WHERE country_name='%s'" 
+            % (country_name))
         return self.cursor.fetchone()[0]
 
     def __getIndicatorCode(self, indicator_name):
-        self.__executeQuery("SELECT indicator_code FROM Indicators WHERE indicator_name='%s'" % (indicator_name))
-        return self.cursor.fetchone()[0]
+        self.__executeQuery(
+            "SELECT indicator_code FROM Indicators WHERE indicator_name='%s'" 
+            % (indicator_name))
+        return self.cursor.fetchone()[0].replace('.', '_').lower()
 
-    def getTimelineValues(self, indicatorName, countryName, fromYear, toYear):
+    def selectBasedOnMultipleVariables(self, indicatorName, countryName, fromYear, toYear):
         indicatorCode = self.__getIndicatorCode(indicatorName)
         countryID = self.__getCountryID(countryName)
-        indicatorCode = indicatorCode.replace('.', '_').lower()
-        #
-        self.__executeQuery("SELECT %s FROM Stats WHERE country_id = %d && year BETWEEN %d AND %d" 
-                            % (indicatorCode, countryID, fromYear, toYear))
+        self.__executeQuery(
+            "SELECT %s FROM Stats WHERE country_id = %d && year BETWEEN %d AND %d" 
+            % (indicatorCode, countryID, fromYear, toYear))
+        return [ind[0] for ind in self.cursor.fetchall()]
+
+    def selectBasedOnYear(self, indicatorName, year):
+        indicatorCode = self.__getIndicatorCode(indicatorName)
+        self.__executeQuery(
+            "SELECT %s FROM Stats WHERE year = %d" 
+            % (indicatorCode, year))
+        return [ind[0] for ind in self.cursor.fetchall()]
+
+    def getYearsInRange(self, fromYear, toYear):
+        self.__executeQuery(
+            "SELECT DISTINCT year FROM Stats WHERE year BETWEEN %s AND %s" 
+            % (fromYear, toYear)
+            )
         return [ind[0] for ind in self.cursor.fetchall()]
 
     ########################
     ### STILL IN PROGRESS ###
     # bar plot
-    
-    # scatter plot
 
     ########################
     def __executeQuery(self, query):
@@ -76,7 +85,7 @@ class DatabaseConnector:
 if __name__ == '__main__':
     connector = DatabaseConnector()
     years = connector.getYearsInRange(1970, 1980)
-    values = connector.getTimelineValues(
+    values = connector.selectBasedOnMultipleVariables(
                     'Renewable energy consumption (% of total final energy consumption)',
                     'Angola', 1990, 2002)
     print(values)

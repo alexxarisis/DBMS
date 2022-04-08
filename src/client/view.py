@@ -214,13 +214,6 @@ class ClientView(object):
 
     # PushButtons on/off
     def updateButtons(self):
-        if (not self.selectedIndicators or not self.selectedCountries or
-            self.__isInvalidYearRange()):
-                self.timelinePushbutton.setDisabled(True)
-                self.barPushbutton.setDisabled(True)
-                self.scatterPushbutton.setDisabled(True)
-                return
-
         self.__updateTimelineButton()
         self.__updateBarButton()
         self.__updateScatterButton()
@@ -231,23 +224,40 @@ class ClientView(object):
             int(self.toYearComboBox.currentText()))
 
     def __updateTimelineButton(self):
+        if (not self.selectedIndicators or not self.selectedCountries or
+                self.__isInvalidYearRange()):
+            self.timelinePushbutton.setDisabled(True)
+            self.barPushbutton.setDisabled(True)
+            return
+
         self.timelinePushbutton.setEnabled(True)
 
     def __updateBarButton(self):
+        if (not self.selectedIndicators or not self.selectedCountries or
+                self.__isInvalidYearRange()):
+            self.timelinePushbutton.setDisabled(True)
+            self.barPushbutton.setDisabled(True)
+            return
         if (len(self.selectedIndicators) > 1 and len(self.selectedCountries) > 1):
             self.barPushbutton.setDisabled(True)
             return
+
         self.barPushbutton.setEnabled(True)
 
     def __updateScatterButton(self):
+        if (not self.selectedIndicators or self.__isInvalidYearRange()):
+            self.scatterPushbutton.setDisabled(True)
+            return
+
         fromYear = int(self.fromYearComboBox.currentText())
         toYear = int(self.toYearComboBox.currentText())
         yearDifference = toYear - fromYear
-        if ((len(self.selectedIndicators) != 2) or
-            (len(self.selectedCountries) == 1 and yearDifference == 0) or
-            (len(self.selectedCountries) > 1 and yearDifference != 0)):
+        if (len(self.selectedIndicators) != 2 or
+            (len(self.selectedCountries) != 1 and yearDifference != 0) or
+            (len(self.selectedCountries) != 0 and yearDifference == 0)):
                 self.scatterPushbutton.setDisabled(True)
                 return
+        
         self.scatterPushbutton.setEnabled(True)
 
     ## Displaying plots
@@ -265,7 +275,12 @@ class ClientView(object):
         print('bar')
 
     def scatterPlotClicked(self):
-        print('scatter')
+        self.engine.makeScatterPlot(
+                        self.selectedIndicators,
+                        self.selectedCountries,
+                        int(self.fromYearComboBox.currentText()),
+                        int(self.toYearComboBox.currentText())
+                        )
 
 if __name__ == "__main__":
     ClientView()

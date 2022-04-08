@@ -51,7 +51,7 @@ class Loader:
                 country_name VARCHAR(64),
                 special_notes TEXT,
                 PRIMARY KEY (country_id)
-            )
+            )   ENGINE=InnoDB
             '''
 
         createStatsTableQuery = '''
@@ -64,7 +64,7 @@ class Loader:
 
         for header in self.__getHeaders():
             createStatsTableQuery += ',\n %s DOUBLE' % (header)
-        createStatsTableQuery += ')'
+        createStatsTableQuery += ') ENGINE=InnoDB'
 
         createIndicatorTableQuery = '''
             CREATE TABLE IF NOT EXISTS Indicators(
@@ -74,7 +74,7 @@ class Loader:
                 source_note TEXT,
                 source_organization TEXT,
                 PRIMARY KEY (indicator_id)
-            )
+            )   ENGINE=InnoDB
         '''
         self.__executeQuery(createCountryTableQuery)
         self.__executeQuery(createStatsTableQuery)
