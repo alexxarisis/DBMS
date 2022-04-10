@@ -5,14 +5,11 @@ from os.path import join
 # Third party imports
 import pandas as pd
 
-# Local application imports
-from model.dataload.fileInformant import FileInformant
-
-class Writer:
-    def __init__(self):
+class CsvWriter:
+    def __init__(self, fileInformant):
         # {Country Code: ID} dictionary
         self.countryIDs = None
-        self.fileInfo = FileInformant()
+        self.fileInfo = fileInformant
 
     def createCsvs(self):
         print('Creating csv\'s...', end=" ")
@@ -86,4 +83,4 @@ class Writer:
         df.to_csv(join(self.fileInfo.outputDir, outputFileName), na_rep='NULL', index = False)
 
 if __name__ == '__main__':
-    Writer().createCsvs()
+    CsvWriter().createCsvs()

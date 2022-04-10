@@ -1,8 +1,13 @@
 class Controller:
-    def __init__(self, dbConnector, dataFormatter, plotMaker):
+    def __init__(self, dataloader, dbConnector, dataFormatter, plotMaker):
         self.dbConnector = dbConnector
         self.dataFormatter = dataFormatter
         self.plotMaker = plotMaker
+        
+        self.__initializeDB(dataloader)
+
+    def __initializeDB(self, dataloader):
+        dataloader.createAndLoadData()
 
     def getIndicators(self):
         return self.dbConnector.getIndicators()

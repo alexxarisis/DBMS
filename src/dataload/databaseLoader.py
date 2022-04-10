@@ -5,12 +5,9 @@ import csv
 # Third party imports
 import mysql.connector
 
-# Local application imports
-from model.dataload.fileInformant import FileInformant
-
-class Loader:
-    def __init__(self):
-        self.fileInfo = FileInformant()
+class DBLoader:
+    def __init__(self, fileInformant):
+        self.fileInfo = fileInformant
 
     def loadToMySQL(self):
         self.__connect()
@@ -115,4 +112,4 @@ class Loader:
             print(e)
 
 if __name__ == '__main__':
-    Loader().loadToMySQL()
+    DBLoader().loadToMySQL()
