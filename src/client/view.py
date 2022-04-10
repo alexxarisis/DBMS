@@ -5,15 +5,12 @@ from re import search
 # Third party imports
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-# Reader imports
-from engine import Engine
-
 class ClientView(object):
-    def __init__(self):
+    def __init__(self, controller):
         import sys
         app = QtWidgets.QApplication(sys.argv)
 
-        self.initializeValues()
+        self.initializeValues(controller)
         self.setupIndicators()
         self.setupCountries()
         self.setupYears()
@@ -26,21 +23,21 @@ class ClientView(object):
         self.Dialog.show()
         sys.exit(app.exec_())
 
-    def initializeValues(self):
+    def initializeValues(self, controller):
         # Gui related
         self.Dialog = QtWidgets.QDialog()
         self.Dialog.setObjectName("Dialog")
         self.Dialog.resize(1114, 830)
         self.translate = QtCore.QCoreApplication.translate
         # Variables
-        self.engine = Engine()
+        self.controller = controller
         self.selectedIndicators = []
         self.selectedCountries = []
 
     def setupIndicators(self):
         # Create Vertical Layout containing all checkboxes
         self.indicatorsLayout = QtWidgets.QVBoxLayout()
-        for indicator in self.engine.getIndicators():
+        for indicator in self.controller.getIndicators():
             checkBox = QtWidgets.QCheckBox()
             checkBox.setText(self.translate("Dialog", indicator))
             checkBox.stateChanged.connect(partial(self.indicatorStateChanged, checkBox))
@@ -70,7 +67,7 @@ class ClientView(object):
     def setupCountries(self):
         # Create Vertical Layout containing all checkboxes
         self.countriesLayout = QtWidgets.QVBoxLayout()
-        for country_name in self.engine.getCountries():
+        for country_name in self.controller.getCountries():
             checkBox = QtWidgets.QCheckBox()
             checkBox.setText(self.translate("Dialog", country_name))
             checkBox.stateChanged.connect(partial(self.countryStateChanged, checkBox))
@@ -128,7 +125,7 @@ class ClientView(object):
         self.perYearCombobox.setObjectName("perYearCombobox")
 
         # Assign values
-        years = list(map(str, self.engine.getYears()))
+        years = list(map(str, self.controller.getYears()))
         self.fromYearComboBox.addItems(years)
         self.toYearComboBox.addItems(years)
         self.toYearComboBox.setCurrentText(years[-1])
@@ -262,7 +259,7 @@ class ClientView(object):
 
     ## Displaying plots
     def timelinePlotClicked(self):
-        self.engine.makeTimelinePlot(
+        self.controller.makeTimelinePlot(
                         self.selectedIndicators,
                         self.selectedCountries,
                         int(self.fromYearComboBox.currentText()),
@@ -275,7 +272,7 @@ class ClientView(object):
         print('bar')
 
     def scatterPlotClicked(self):
-        self.engine.makeScatterPlot(
+        self.controller.makeScatterPlot(
                         self.selectedIndicators,
                         self.selectedCountries,
                         int(self.fromYearComboBox.currentText()),

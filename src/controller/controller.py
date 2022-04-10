@@ -1,13 +1,8 @@
-# Local application imports
-from databaseConnector import DatabaseConnector
-from dataformat import DataFormatter
-from plots import PlotMaker
-
-class Engine:
-    def __init__(self):
-        self.dbConnector = DatabaseConnector()
-        self.dataFormatter = DataFormatter()
-        self.plotMaker = PlotMaker()
+class Controller:
+    def __init__(self, dbConnector, dataFormatter, plotMaker):
+        self.dbConnector = dbConnector
+        self.dataFormatter = dataFormatter
+        self.plotMaker = plotMaker
 
     def getIndicators(self):
         return self.dbConnector.getIndicators()
@@ -22,12 +17,12 @@ class Engine:
         data =  self.dataFormatter.getTimelineData(indicators, countries,
                                                         fromYear, toYear)
         years = self.dbConnector.getYearsInRange(fromYear, toYear)
-
         self.plotMaker.makeTimelinePlot(data, years, indicators)
     
+    def makeBarPlot(self, indicators, countries, fromYear, toYear, perYears):
+        print('haha made a bar plot yuhoo')
+
     def makeScatterPlot(self, indicators, countries, fromYear, toYear):
         data = self.dataFormatter.getScatterData(indicators, countries,
                                                         fromYear, toYear)
         self.plotMaker.makeScatterPlot(data, indicators, countries)
-        
-

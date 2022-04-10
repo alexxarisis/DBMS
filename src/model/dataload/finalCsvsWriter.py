@@ -6,7 +6,7 @@ from os.path import join
 import pandas as pd
 
 # Local application imports
-from fileInformation import FileInformant
+from model.dataload.fileInformant import FileInformant
 
 class Writer:
     def __init__(self):

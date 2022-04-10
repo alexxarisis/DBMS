@@ -15,7 +15,7 @@ class FileInformant:
     def __getInputOutputDirectories(self):
         # Get to csv's directory
         currentPath = Path(getcwd())
-        csvsDir = join(currentPath.parent.parent.absolute(), 'csvs')
+        csvsDir = join(currentPath.parent.absolute(), 'csvs')
         # Input csvs directories
         self.countriesDir = join(csvsDir, 'countries')
         self.statsDir = join(csvsDir, 'stats')

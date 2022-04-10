@@ -6,7 +6,7 @@ import csv
 import mysql.connector
 
 # Local application imports
-from fileInformation import FileInformant
+from model.dataload.fileInformant import FileInformant
 
 class Loader:
     def __init__(self):

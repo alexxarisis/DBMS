@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from dataformat import TimelineData, ScatterData
+from model.dataFormatter import TimelineData, ScatterData
 
 def barChartk(countries,indicator,name,yname):
     y_pos = np.arange(len(countries))

@@ -1,5 +1,5 @@
 # Local application imports
-from databaseConnector import DatabaseConnector
+from model.databaseConnector import DatabaseConnector
 
 class TimelineData():
     def __init__(self, country, indicator, values):
@@ -15,6 +15,7 @@ class DataFormatter():
     def __init__(self):
         self.dbConnector = DatabaseConnector()
 
+    # Returns a list of TimelineData objects
     def getTimelineData(self, indicators, countries, fromYear, toYear):
         data = []
         for indicator in indicators:
@@ -24,6 +25,7 @@ class DataFormatter():
                 data.append(TimelineData(country, indicator, values))
         return data
 
+    # Returns a ScatterData object
     def getScatterData(self, indicators, countries, fromYear, toYear):
         data = []
         for indicator in indicators:

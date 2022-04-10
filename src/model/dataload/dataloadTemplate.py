@@ -1,6 +1,6 @@
 # Local application imports
-from createFinalCsvs import Writer
-from loadToMySQL import Loader
+from model.dataload.finalCsvsWriter import Writer
+from model.dataload.databaseLoader import Loader
 
 def createAndLoadData():
     Writer().createCsvs()
