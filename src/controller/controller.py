@@ -1,13 +1,8 @@
 class Controller:
-    def __init__(self, dataloader, dbConnector, dataFormatter, plotMaker):
+    def __init__(self, dbConnector, dataFormatter, plotMaker):
         self.dbConnector = dbConnector
         self.dataFormatter = dataFormatter
         self.plotMaker = plotMaker
-        
-        self.__initializeDB(dataloader)
-
-    def __initializeDB(self, dataloader):
-        dataloader.createAndLoadData()
 
     def getIndicators(self):
         return self.dbConnector.getIndicators()
@@ -22,7 +17,7 @@ class Controller:
         data =  self.dataFormatter.getTimelineData(indicators, countries,
                                                         fromYear, toYear)
         years = self.dbConnector.getYearsInRange(fromYear, toYear)
-        self.plotMaker.makeTimelinePlot(data, years, indicators)
+        self.plotMaker.makeTimelinePlot(data, years, indicators, perYears)
     
     def makeBarPlot(self, indicators, countries, fromYear, toYear, perYears):
         print('haha made a bar plot yuhoo')

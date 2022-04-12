@@ -1,6 +1,7 @@
 # Third party imports
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 from model.dataFormatter import TimelineData, ScatterData
 
@@ -40,7 +41,7 @@ class PlotMaker:
     def __init__(self):
         plt.ion()
 
-    def makeTimelinePlot(self, data:TimelineData, years, indicators):
+    def makeTimelinePlot(self, data:TimelineData, years, indicators, perYears):
         plt.figure()
         for i in data:
             plt.plot(years, i.values, label=i.name)
@@ -66,4 +67,3 @@ class PlotMaker:
         plt.ticklabel_format(style='plain')
         plt.tight_layout()
         plt.show()
-

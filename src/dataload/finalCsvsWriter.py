@@ -12,7 +12,8 @@ class CsvWriter:
         self.fileInfo = fileInformant
 
     def createCsvs(self):
-        print('Creating csv\'s...', end=" ")
+        print('CsvWriter: ')
+        print('\tCreating csv\'s...', end=" ")
         self.__createCountriesCsv()
         self.__createStatsCsv()
         self.__createIndicatorsCsv()
@@ -81,6 +82,3 @@ class CsvWriter:
 
     def __exportToCsv(self, df, outputFileName):
         df.to_csv(join(self.fileInfo.outputDir, outputFileName), na_rep='NULL', index = False)
-
-if __name__ == '__main__':
-    CsvWriter().createCsvs()
