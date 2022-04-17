@@ -1,3 +1,5 @@
+
+
 class Controller:
     def __init__(self, dbConnector, dataFormatter, plotMaker):
         self.dbConnector = dbConnector
@@ -22,7 +24,7 @@ class Controller:
     def makeBarPlot(self, indicators, countries, fromYear, toYear, perYears):
         print('haha made a bar plot yuhoo')
 
-    def makeScatterPlot(self, indicators, countries, fromYear, toYear):
+    def makeScatterPlot(self, indicators, countries, fromYear, toYear, perYears):
         data = self.dataFormatter.getScatterData(indicators, countries,
                                                         fromYear, toYear)
-        self.plotMaker.makeScatterPlot(data, indicators, countries)
+        self.plotMaker.makeScatterPlot(data, indicators, countries, perYears)

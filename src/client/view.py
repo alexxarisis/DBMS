@@ -276,7 +276,9 @@ class ClientView(object):
                         self.selectedIndicators,
                         self.selectedCountries,
                         int(self.fromYearComboBox.currentText()),
-                        int(self.toYearComboBox.currentText())
+                        int(self.toYearComboBox.currentText()),
+                        int(search(r'\d+', 
+                            self.perYearCombobox.currentText()).group())
                         )
 
 if __name__ == "__main__":
