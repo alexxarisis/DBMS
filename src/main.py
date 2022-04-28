@@ -10,7 +10,7 @@ from controller.controller import Controller
 from client import view
 
 if __name__ == '__main__':
-    #DataLoader().createAndLoadData()
+    DataLoader().createAndLoadData()
     print('Opening App...')
     myController = Controller(
         DatabaseConnector(),

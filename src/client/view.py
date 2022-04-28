@@ -224,7 +224,6 @@ class ClientView(object):
         if (not self.selectedIndicators or not self.selectedCountries or
                 self.__isInvalidYearRange()):
             self.timelinePushbutton.setDisabled(True)
-            self.barPushbutton.setDisabled(True)
             return
 
         self.timelinePushbutton.setEnabled(True)
@@ -232,10 +231,6 @@ class ClientView(object):
     def __updateBarButton(self):
         if (not self.selectedIndicators or not self.selectedCountries or
                 self.__isInvalidYearRange()):
-            self.timelinePushbutton.setDisabled(True)
-            self.barPushbutton.setDisabled(True)
-            return
-        if (len(self.selectedIndicators) > 1 and len(self.selectedCountries) > 1):
             self.barPushbutton.setDisabled(True)
             return
 
@@ -249,6 +244,7 @@ class ClientView(object):
         fromYear = int(self.fromYearComboBox.currentText())
         toYear = int(self.toYearComboBox.currentText())
         yearDifference = toYear - fromYear
+        
         if (len(self.selectedIndicators) != 2 or
             (len(self.selectedCountries) != 1 and yearDifference != 0) or
             (len(self.selectedCountries) != 0 and yearDifference == 0)):
@@ -269,7 +265,14 @@ class ClientView(object):
                         )
 
     def barPlotClicked(self):
-        print('bar')
+        self.controller.makeBarPlot(
+                        self.selectedIndicators,
+                        self.selectedCountries,
+                        int(self.fromYearComboBox.currentText()),
+                        int(self.toYearComboBox.currentText()),
+                        int(search(r'\d+', 
+                            self.perYearCombobox.currentText()).group())
+                        )
 
     def scatterPlotClicked(self):
         self.controller.makeScatterPlot(

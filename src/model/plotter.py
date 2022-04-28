@@ -1,74 +1,42 @@
 # Third party imports
 import matplotlib.pyplot as plt
-import numpy as np
-
-from model.dataFormatter import TimelineData, ScatterData
-
-def barChartk(countries,indicator,name,yname):
-    y_pos = np.arange(len(countries))
-    y_val = []
-
-    plt.bar(y_pos, y_val ,align='center', alpha=0.5)
-    plt.xticks(y_pos, countries)
-    plt.ylabel(yname)
-    plt.title(name)
-
-    plt.show()
-
-def barChartkindk(countries,indicator,name,yname):
-    y_pos = np.arange(len(countries))
-    y_val = []
-
-    plt.bar(y_pos, y_val ,align='center', alpha=0.5)
-    plt.xticks(y_pos, countries)
-    plt.ylabel(yname)
-    plt.title(name)
-
-    # data set ftiaksimooo
-    x = ['A', 'B', 'C', 'D']
-    y1 = [100, 120, 110, 130]
-    y2 = [120, 125, 115, 125]
-
-    # plot stacked bar chart 
-    plt.bar(x, y1, color='g')
-    plt.bar(x, y2, bottom=y1, color='y')
-    plt.show()
-
-############################
+import pandas as pd
 
 class PlotMaker:
     def __init__(self):
+        # settings
         plt.ion()
+        plt.rc('legend', fontsize=8)
+        plt.rc('figure', figsize=(12,6))
 
-    def makeTimelinePlot(self, data:TimelineData, years, indicators):
-        plt.figure()
+    def makeTimelinePlot(self, df:pd.DataFrame):
+        # get all column names except 'Years'
+        indicators = list(df).remove('Years')
         # plot
-        for i in data:
-            plt.plot(years, i.values, label=i.name)
+        df.plot(x="Years", y=indicators)
+        self.__applyFigureAftereffects()
 
-        # THE REST
-        # dunno
-        # plt.title('\n'.join(indicators), fontsize=8)
-        plt.legend(fontsize=8)
-        # removes scientific scaling
-        plt.ticklabel_format(style='plain', axis='y')
-        # numbers fit
-        plt.tight_layout()
-        plt.show()
-
-    def makeScatterPlot(self, data:ScatterData, indicators, countries):
-        plt.figure()
+    def makeBarPlot(self, df:pd.DataFrame):
+        # get all column names except 'Years'
+        indicators = list(df).remove('Years')
         # plot
-        plt.scatter(data.indicator1, data.indicator2)
+        df.plot(x="Years", y=indicators, kind="bar")
+        self.__applyFigureAftereffects()
 
-        # THE REST
-        # plt.rcParams.update({'figure.figsize':(10,8), 'figure.dpi':100})       #???????????
-        plt.xlabel(indicators[0])
-        plt.ylabel(indicators[1])
+    def makeScatterPlot(self, df:pd.DataFrame, countries, year):
+        # get all column names
+        indicators = list(df)
+        # plot
+        df.plot.scatter(x=indicators[0], y=indicators[1])
+        # title
         if (len(countries) == 1):
-            plt.title('Correlation of %s' % (countries[0]))
+            plt.title('Correlation of %s for specified years' % (countries[0]))
         else:
-            plt.title('Correlation of all countries')
+            plt.title('Correlation of all countries in the year %d' % (year))
+        self.__applyFigureAftereffects()
+
+    def __applyFigureAftereffects(self):
+        # removes scientific scaling
         plt.ticklabel_format(style='plain')
+        # make everything visible/fit in the figure
         plt.tight_layout()
-        plt.show()
