@@ -40,12 +40,12 @@ class DBCreator:
         print('\tCreating tables...', end=' ')
         createCountryTableQuery = '''
             CREATE TABLE IF NOT EXISTS Countries(
-                country_id INT NOT NULL AUTO_INCREMENT,
                 country_code VARCHAR(3),
                 region VARCHAR(64),
                 income_group VARCHAR(64),
                 country_name VARCHAR(64),
                 special_notes TEXT,
+                country_id INT NOT NULL AUTO_INCREMENT,
                 PRIMARY KEY (country_id)
             )   ENGINE=InnoDB
             '''
@@ -64,11 +64,11 @@ class DBCreator:
 
         createIndicatorTableQuery = '''
             CREATE TABLE IF NOT EXISTS Indicators(
-                indicator_id INT NOT NULL AUTO_INCREMENT,
                 indicator_code VARCHAR(32),
                 indicator_name TEXT,
                 source_note TEXT,
                 source_organization TEXT,
+                indicator_id INT NOT NULL AUTO_INCREMENT,
                 PRIMARY KEY (indicator_id)
             )   ENGINE=InnoDB
         '''
