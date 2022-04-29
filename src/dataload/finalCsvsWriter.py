@@ -7,8 +7,8 @@ import pandas as pd
 
 class CsvWriter:
     def __init__(self, fileInformant):
-        # {Country Code: ID} dictionary
-        self.countryIDs = None
+        # list of countries, in the order read
+        self.countries = []
         self.fileInfo = fileInformant
 
     def createCsvs(self):
@@ -27,22 +27,19 @@ class CsvWriter:
 
         # Drop unnecessary columns 
         finalDf = finalDf.drop(['Unnamed: 5', 'Unnamed: 4'], axis=1)
-        # Make ID column
-        finalDf = finalDf.reset_index(drop=True)
-        finalDf.insert(0, 'Country ID', finalDf.index)
+        # Export
         self.__exportToCsv(finalDf, self.fileInfo.countriesCsv)
-        # Also...
-        # Fill dict with {country-id} values
-        self.countryIDs = dict(zip(finalDf['Country Code'], finalDf['Country ID']))
+        # save countries code in order read
+        self.countries = finalDf['Country Code'].to_list()
 
     def __createStatsCsv(self):
         finalDf = pd.DataFrame()
 
         for filename in listdir(self.fileInfo.statsDir):
             df = pd.read_csv(join(self.fileInfo.statsDir, filename), skiprows=4)
-            # Get specific ID of country
+            # Get specific ID of country based on country code
             code = df['Country Code'].drop_duplicates().loc[0]
-            id = self.countryIDs.get(code)
+            id = self.countries.index(code) + 1
 
             # Invert dataframe and drop unnessecary columns
             df = df.T
@@ -58,9 +55,10 @@ class CsvWriter:
             columnFilter = [col for col in df if col.startswith(wantedColumns)]
             df = df[columnFilter]
 
-            # insert ID column
+            # insert ID column based on country code
             df.insert(0, 'Country ID', id)
             finalDf = pd.concat([finalDf, df])
+        # Export
         self.__exportToCsv(finalDf, self.fileInfo.statsCsv)
 
     def __createIndicatorsCsv(self):
@@ -71,13 +69,12 @@ class CsvWriter:
             df = df.drop(['Unnamed: 4'], axis = 1)
             finalDf = pd.concat([finalDf, df])
 
+        # Keep specified non-duplicated columns
         finalDf = finalDf.drop_duplicates()
         finalDf = finalDf[finalDf['INDICATOR_CODE'].str.startswith('BM') | 
                             finalDf['INDICATOR_CODE'].str.startswith('EG') |
                             finalDf['INDICATOR_CODE'].str.startswith('GC.TAX') ]
-        # Make IDs column
-        finalDf.insert(0, column='Indicator ID', value=list(range(0, len(finalDf))))
-
+        # Export
         self.__exportToCsv(finalDf, self.fileInfo.indicatorsCsv)
 
     def __exportToCsv(self, df, outputFileName):

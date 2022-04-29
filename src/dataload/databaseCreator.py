@@ -40,7 +40,7 @@ class DBCreator:
         print('\tCreating tables...', end=' ')
         createCountryTableQuery = '''
             CREATE TABLE IF NOT EXISTS Countries(
-                country_id INT NOT NULL,
+                country_id INT NOT NULL AUTO_INCREMENT,
                 country_code VARCHAR(3),
                 region VARCHAR(64),
                 income_group VARCHAR(64),
@@ -64,7 +64,7 @@ class DBCreator:
 
         createIndicatorTableQuery = '''
             CREATE TABLE IF NOT EXISTS Indicators(
-                indicator_id INT NOT NULL,
+                indicator_id INT NOT NULL AUTO_INCREMENT,
                 indicator_code VARCHAR(32),
                 indicator_name TEXT,
                 source_note TEXT,
