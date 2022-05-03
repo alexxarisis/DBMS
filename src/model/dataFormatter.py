@@ -20,11 +20,14 @@ class DataFormatter():
         # groudby aggregated time
         if (perYears != 1):
             df = df.groupby(df.index//perYears).mean()
-
         # get specified years
         years = self.dbConnector.getYearsInRange(fromYear, toYear)
         years = self.__getYearsByPeriod(years, perYears)
         df['Years'] = years
+
+        # remove rows with all NaN values (dont count 'Years' column)
+        columnsToCheck = [n for n in df if n != 'Years']
+        df.dropna(how='all', subset=columnsToCheck, inplace=True)
         return df
     
     # Returns a dataframe with 2 indicator columns
