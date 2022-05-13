@@ -27,7 +27,7 @@ class ClientView(object):
         # Gui related
         self.Dialog = QtWidgets.QDialog()
         self.Dialog.setObjectName("Dialog")
-        self.Dialog.resize(1114, 830)
+        self.Dialog.resize(1115, 830)
         self.translate = QtCore.QCoreApplication.translate
         # Variables
         self.controller = controller
@@ -165,6 +165,7 @@ class ClientView(object):
         self.scatterPushbutton.clicked.connect(self.scatterPlotClicked)
 
     def decorateUI(self):
+        # lines
         self.line = QtWidgets.QFrame(self.Dialog)
         self.line.setGeometry(QtCore.QRect(550, 540, 561, 20))
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
@@ -189,8 +190,8 @@ class ClientView(object):
         self.chooseYearsLabel.setText(self.translate("Dialog", "Choose years:"))
         self.perYearsLabel.setText(self.translate("Dialog", "Per:"))
         self.chooseCountriesLabel.setText(self.translate("Dialog", "Choose countries:"))
-        self.timelinePushbutton.setText(self.translate("Dialog", "Timeline"))
         self.plotLabel.setText(self.translate("Dialog", "Choose an available type of plot:"))
+        self.timelinePushbutton.setText(self.translate("Dialog", "Timeline"))
         self.barPushbutton.setText(self.translate("Dialog", "Bar"))
         self.scatterPushbutton.setText(self.translate("Dialog", "Scatter"))
 
@@ -283,6 +284,3 @@ class ClientView(object):
                         int(search(r'\d+', 
                             self.perYearCombobox.currentText()).group())
                         )
-
-if __name__ == "__main__":
-    ClientView()
