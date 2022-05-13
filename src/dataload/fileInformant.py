@@ -15,16 +15,16 @@ class FileInformant:
     def __getInputOutputDirectories(self):
         # Get to csv's directory
         currentPath = Path(getcwd())
-        csvsDir = join(currentPath.parent.absolute(), 'csvs')
-        originalCsvsDir = join(csvsDir, 'original data')
+        dataDir = join(currentPath.parent.absolute(), 'data')
+        originalCsvsDir = join(dataDir, 'original')
         # Input csvs directories
         self.countriesDir = join(originalCsvsDir, 'countries')
         self.statsDir = join(originalCsvsDir, 'stats')
         self.indicatorsDir = join(originalCsvsDir, 'indicators')
         # Output directory
-        self.outputDir = join(csvsDir, 'final data')
+        self.outputDir = join(dataDir, 'final')
 
-
+# For testing purposes
 if __name__ == '__main__':
     fileInfo = FileInformant()
     print(fileInfo.countriesCsv)
