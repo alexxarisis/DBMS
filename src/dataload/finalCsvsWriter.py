@@ -27,10 +27,10 @@ class CsvWriter:
 
         # Drop unnecessary columns 
         finalDf = finalDf.drop(['Unnamed: 5', 'Unnamed: 4'], axis=1)
-        # Export
-        self.__exportToCsv(finalDf, self.fileInfo.countriesCsv)
         # save countries code in order read
         self.countries = finalDf['Country Code'].to_list()
+        # Export
+        self.__exportToCsv(finalDf, self.fileInfo.countriesCsv)
 
     def __createStatsCsv(self):
         finalDf = pd.DataFrame()
