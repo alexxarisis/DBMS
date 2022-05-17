@@ -28,7 +28,9 @@ class DBLoader:
         except mysql.connector.Error as e:
                 print(e)
                 print("Connection not established.")
+                
         print('Done')
+        return 1
 
     def __dataAreAlreadyLoaded(self, tableName):
         # returns 1 if there are any rows, otherwise 0
@@ -44,6 +46,7 @@ class DBLoader:
         self.__loadCsv(self.fileInfo.statsCsv, 'Stats')
         self.__loadCsv(self.fileInfo.indicatorsCsv, 'Indicators')
         print('Done')
+        return 1
 
     def __loadCsv(self, csvFile, tableName):
         if (self.__dataAreAlreadyLoaded(tableName)):

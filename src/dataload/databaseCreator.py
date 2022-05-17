@@ -29,6 +29,7 @@ class DBCreator:
                 print(e)
                 print("Connection not established.")
         print('Done')
+        return 1
 
     def __createDatabase(self):
         print('\tCreating database...', end=' ')
