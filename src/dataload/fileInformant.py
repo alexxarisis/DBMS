@@ -23,14 +23,3 @@ class FileInformant:
         self.indicatorsDir = join(originalCsvsDir, 'indicators')
         # Output directory
         self.outputDir = join(dataDir, 'final')
-
-# For testing purposes
-if __name__ == '__main__':
-    fileInfo = FileInformant()
-    print(fileInfo.countriesCsv)
-    print(fileInfo.statsCsv)
-    print(fileInfo.indicatorsCsv)
-    print(fileInfo.countriesDir)
-    print(fileInfo.statsDir)
-    print(fileInfo.indicatorsDir)
-    print(fileInfo.outputDir)

@@ -20,7 +20,7 @@ class Controller:
                                                         fromYear, toYear, perYears)
         # plot
         self.plotMaker.makeTimelinePlot(data)
-    
+
     def makeBarPlot(self, indicators, countries, fromYear, toYear, perYears):
         #data
         data =  self.dataFormatter.getBarOrTimelineData(indicators, countries,
