@@ -3,6 +3,7 @@ from tests.dataload import (fileInformantTest,
                             finalCsvWriterTest, 
                             databaseCreatorTest,
                             databaseLoaderTest)
+from tests.model import dataFormatterTest
 
 def runDataloadTests():
     fileInfo = fileInformantTest.runTests()
@@ -10,5 +11,9 @@ def runDataloadTests():
     databaseCreatorTest.runTests(fileInfo)
     databaseLoaderTest.runTests(fileInfo)
 
+def runModelTests():
+    dataFormatterTest.runTests()
+
 if __name__ == "__main__":
     runDataloadTests()
+    runModelTests()
