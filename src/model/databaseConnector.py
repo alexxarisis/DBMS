@@ -81,11 +81,3 @@ class DatabaseConnector:
             self.cursor.execute(query)
         except mysql.connector.Error as e:
             print(e)
-
-if __name__ == '__main__':
-    connector = DatabaseConnector()
-    years = connector.getYearsInRange(1970, 1980)
-    values = connector.selectBasedOnMultipleVariables(
-                    'Renewable energy consumption (% of total final energy consumption)',
-                    'Angola', 1990, 2002)
-    print(values)

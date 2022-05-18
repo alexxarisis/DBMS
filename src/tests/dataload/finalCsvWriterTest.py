@@ -1,9 +1,13 @@
-from dataload.fileInformant import FileInformant
-from dataload.finalCsvsWriter import CsvWriter
-
+# Standard library imports
 from os import listdir
 from os.path import join
+
+# Third party imports
 import pandas as pd
+
+# Local application imports
+from dataload.fileInformant import FileInformant
+from dataload.finalCsvsWriter import CsvWriter
 
 def runTests(fileInfo: FileInformant):
     CsvWriter(fileInfo).createCsvs()

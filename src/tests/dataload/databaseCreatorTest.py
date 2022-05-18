@@ -1,8 +1,12 @@
-from dataload.databaseCreator import DBCreator
+# Standard library imports
+from os.path import join
 
+# Third party imports
 import mysql.connector
 import pandas as pd
-from os.path import join
+
+# Local application imports
+from dataload.databaseCreator import DBCreator
 
 def runTests(fileInfo):
     DBCreator(fileInfo).createDB()

@@ -1,5 +1,6 @@
 # Third party imports
 import pandas as pd
+
 # Local application imports
 from model.dataFormatter import DataFormatter
 

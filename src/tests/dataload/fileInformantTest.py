@@ -1,7 +1,9 @@
+# Standard library imports
 from os import getcwd
 from os.path import join
 from pathlib import Path
 
+# Local application imports
 from dataload.fileInformant import FileInformant
 
 def runTests():

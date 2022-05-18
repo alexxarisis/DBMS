@@ -1,6 +1,8 @@
-from dataload.databaseLoader import DBLoader
-
+# Third party imports
 import mysql.connector
+
+# Local application imports
+from dataload.databaseLoader import DBLoader
 
 def runTests(fileInfo):
     DBLoader(fileInfo).loadToMySQL()
