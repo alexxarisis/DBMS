@@ -43,7 +43,7 @@ class DBCreator:
     def __createTables(self):
         print('\tCreating tables...', end=' ')
         createCountryTableQuery = '''
-            CREATE TABLE IF NOT EXISTS Countries(
+            CREATE TABLE Countries(
                 country_code VARCHAR(3),
                 region VARCHAR(64),
                 income_group VARCHAR(64),
@@ -55,7 +55,7 @@ class DBCreator:
             '''
 
         createStatsTableQuery = '''
-            CREATE TABLE IF NOT EXISTS Stats(
+            CREATE TABLE Stats(
                 country_id INT NOT NULL,
                 year YEAR NOT NULL,
                 PRIMARY KEY (country_id, year),
@@ -67,7 +67,7 @@ class DBCreator:
         createStatsTableQuery += ') ENGINE=InnoDB'
 
         createIndicatorTableQuery = '''
-            CREATE TABLE IF NOT EXISTS Indicators(
+            CREATE TABLE Indicators(
                 indicator_code VARCHAR(32),
                 indicator_name TEXT,
                 source_note TEXT,
