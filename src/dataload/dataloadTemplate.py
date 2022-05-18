@@ -2,14 +2,14 @@
 from dataload.finalCsvsWriter import CsvWriter
 from dataload.databaseCreator import DBCreator
 from dataload.databaseLoader import DBLoader
-from dataload.fileInformant import FileInformant
+from dataload.pathFinder import PathFinder
 
 class DataLoader():
     def __init__(self):
-        self.fileInfo = FileInformant()
+        self.pathFinder = PathFinder()
 
     def createAndLoadData(self):
-        CsvWriter(self.fileInfo).createCsvs()
-        DBCreator(self.fileInfo).createDB()
-        DBLoader(self.fileInfo).loadToMySQL()
+        CsvWriter(self.pathFinder).createCsvs()
+        DBCreator(self.pathFinder).createDB()
+        DBLoader(self.pathFinder).loadToMySQL()
         print('Data loaded successfully...')

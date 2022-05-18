@@ -3,18 +3,18 @@ import os, sys
 
 # Local application imports
 # dataload
-from tests.dataload import (fileInformantTest, 
-                            finalCsvWriterTest, 
+from tests.dataload import (finalCsvWriterTest, 
                             databaseCreatorTest,
-                            databaseLoaderTest)
+                            databaseLoaderTest, 
+                            pathFinderTest)
 # model
 from tests.model import dataFormatterTest, databaseControllerTest
 
 def runDataloadTests():
-    fileInfo = fileInformantTest.runTests()
-    finalCsvWriterTest.runTests(fileInfo)
-    databaseCreatorTest.runTests(fileInfo)
-    databaseLoaderTest.runTests(fileInfo)
+    pathFinder = pathFinderTest.runTests()
+    finalCsvWriterTest.runTests(pathFinder)
+    databaseCreatorTest.runTests(pathFinder)
+    databaseLoaderTest.runTests(pathFinder)
 
 def runModelTests():
     databaseControllerTest.runTests()

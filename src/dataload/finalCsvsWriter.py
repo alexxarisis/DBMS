@@ -5,11 +5,14 @@ from os.path import join
 # Third party imports
 import pandas as pd
 
+# Local application imports
+import settings
+
 class CsvWriter:
-    def __init__(self, fileInformant):
+    def __init__(self, pathFinder):
         # list of countries, in the order read
         self.countries = []
-        self.fileInfo = fileInformant
+        self.pathFinder = pathFinder
 
     def createCsvs(self):
         print('CsvWriter: ')
@@ -21,8 +24,8 @@ class CsvWriter:
 
     def __createCountriesCsv(self):
         finalDf = pd.DataFrame()
-        for filename in listdir(self.fileInfo.countriesDir):
-            df = pd.read_csv(join(self.fileInfo.countriesDir, filename))
+        for filename in listdir(self.pathFinder.countriesDir):
+            df = pd.read_csv(join(self.pathFinder.countriesDir, filename))
             finalDf = pd.concat([finalDf, df])
 
         # Drop unnecessary columns 
@@ -30,13 +33,13 @@ class CsvWriter:
         # save countries code in order read
         self.countries = finalDf['Country Code'].to_list()
         # Export
-        self.__exportToCsv(finalDf, self.fileInfo.countriesCsv)
+        self.__exportToCsv(finalDf, settings.countriesCsv)
 
     def __createStatsCsv(self):
         finalDf = pd.DataFrame()
 
-        for filename in listdir(self.fileInfo.statsDir):
-            df = pd.read_csv(join(self.fileInfo.statsDir, filename), skiprows=4)
+        for filename in listdir(self.pathFinder.statsDir):
+            df = pd.read_csv(join(self.pathFinder.statsDir, filename), skiprows=4)
             # Get specific ID of country based on country code
             code = df['Country Code'].drop_duplicates().loc[0]
             id = self.countries.index(code) + 1
@@ -59,13 +62,13 @@ class CsvWriter:
             df.insert(0, 'Country ID', id)
             finalDf = pd.concat([finalDf, df])
         # Export
-        self.__exportToCsv(finalDf, self.fileInfo.statsCsv)
+        self.__exportToCsv(finalDf, settings.statsCsv)
 
     def __createIndicatorsCsv(self):
         finalDf = pd.DataFrame()
 
-        for filename in listdir(self.fileInfo.indicatorsDir):
-            df = pd.read_csv(join(self.fileInfo.indicatorsDir, filename))
+        for filename in listdir(self.pathFinder.indicatorsDir):
+            df = pd.read_csv(join(self.pathFinder.indicatorsDir, filename))
             df = df.drop(['Unnamed: 4'], axis = 1)
             finalDf = pd.concat([finalDf, df])
 
@@ -75,7 +78,7 @@ class CsvWriter:
                             finalDf['INDICATOR_CODE'].str.startswith('EG') |
                             finalDf['INDICATOR_CODE'].str.startswith('GC.TAX') ]
         # Export
-        self.__exportToCsv(finalDf, self.fileInfo.indicatorsCsv)
+        self.__exportToCsv(finalDf, settings.indicatorsCsv)
 
     def __exportToCsv(self, df, outputFileName):
-        df.to_csv(join(self.fileInfo.outputDir, outputFileName), na_rep='NULL', index = False)
+        df.to_csv(join(self.pathFinder.outputDir, outputFileName), na_rep='NULL', index = False)

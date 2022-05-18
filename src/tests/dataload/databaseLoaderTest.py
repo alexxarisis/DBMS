@@ -3,9 +3,10 @@ import mysql.connector
 
 # Local application imports
 from dataload.databaseLoader import DBLoader
+import settings
 
-def runTests(fileInfo):
-    DBLoader(fileInfo).loadToMySQL()
+def runTests(pathFinder):
+    DBLoader(pathFinder).loadToMySQL()
     
     cnx, cursor = connect()
     countriesTableTest(cursor)
@@ -16,9 +17,9 @@ def runTests(fileInfo):
 def connect():
     try:
         cnx = mysql.connector.connect( host = '127.0.0.1',
-                            user = 'root', 
-                            password = 'root',
-                            database = 'dbms')
+                                user = settings.user, 
+                                password = settings.password,
+                                database = settings.database)
         cursor = cnx.cursor()
     except mysql.connector.Error as e:
             print(e)

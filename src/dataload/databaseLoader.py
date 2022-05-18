@@ -4,9 +4,12 @@ from os.path import join
 # Third party imports
 import mysql.connector
 
+# Local application imports
+import settings
+
 class DBLoader:
-    def __init__(self, fileInformant):
-        self.fileInfo = fileInformant
+    def __init__(self, pathFinder):
+        self.pathFinder = pathFinder
 
     def loadToMySQL(self):
         print('DBLoader: ')
@@ -20,9 +23,9 @@ class DBLoader:
         print('\tConnecting... ', end=' ')
         try:
             self.cnx = mysql.connector.connect( host = '127.0.0.1',
-                                user = 'root', 
-                                password = 'root',
-                                database='dbms',
+                                user = settings.user, 
+                                password = settings.password,
+                                database = settings.database,
                                 allow_local_infile=True)
             self.cursor = self.cnx.cursor()
         except mysql.connector.Error as e:
@@ -40,9 +43,9 @@ class DBLoader:
         print('\tLoading files...', end=' ')
         self.__executeQuery('SET GLOBAL local_infile=\'ON\';')
 
-        self.__loadCsv(self.fileInfo.countriesCsv, 'Countries')
-        self.__loadCsv(self.fileInfo.statsCsv, 'Stats')
-        self.__loadCsv(self.fileInfo.indicatorsCsv, 'Indicators')
+        self.__loadCsv(settings.countriesCsv, 'Countries')
+        self.__loadCsv(settings.statsCsv, 'Stats')
+        self.__loadCsv(settings.indicatorsCsv, 'Indicators')
         print('Done')
 
     def __loadCsv(self, csvFile, tableName):
@@ -59,7 +62,7 @@ class DBLoader:
                 OPTIONALLY ENCLOSED BY '"'
                 LINES TERMINATED BY '\r\n'
                 IGNORE 1 LINES
-            """ % (join(self.fileInfo.outputDir, csvFile).replace('\\', '/'), tableName)
+            """ % (join(self.pathFinder.outputDir, csvFile).replace('\\', '/'), tableName)
 
     def __executeQuery(self, query):
         try:

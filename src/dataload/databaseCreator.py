@@ -5,9 +5,12 @@ import csv
 # Third party imports
 import mysql.connector
 
+# Local application imports
+import settings
+
 class DBCreator:
-    def __init__(self, fileInformant):
-        self.fileInfo = fileInformant
+    def __init__(self, pathFinder):
+        self.pathFinder = pathFinder
 
     def createDB(self):
         print('DBCreator: ')
@@ -22,8 +25,8 @@ class DBCreator:
         print('\tConnecting... ', end=' ')
         try:
             self.cnx = mysql.connector.connect( host = '127.0.0.1',
-                                user = 'root', 
-                                password = 'root')
+                                user = settings.user, 
+                                password = settings.password)
             self.cursor = self.cnx.cursor()
         except mysql.connector.Error as e:
                 print(e)
@@ -32,8 +35,8 @@ class DBCreator:
 
     def __createDatabase(self):
         print('\tCreating database...', end=' ')
-        self.__executeQuery('CREATE DATABASE IF NOT EXISTS dbms')
-        self.__executeQuery('USE dbms')
+        self.__executeQuery('CREATE DATABASE IF NOT EXISTS %s' % settings.database)
+        self.__executeQuery('USE %s' % settings.database)
         print('Done')
 
     def __createTables(self):
@@ -79,7 +82,7 @@ class DBCreator:
         print('Done')
         
     def __getHeaders(self):
-        with open(join(self.fileInfo.outputDir, self.fileInfo.statsCsv), newline='') as file:
+        with open(join(self.pathFinder.outputDir, settings.statsCsv), newline='') as file:
             reader = csv.reader(file)
             headers = next(reader)
             formattedHeaders = [header.replace('.', '_').lower() for header in headers]

@@ -1,6 +1,9 @@
 # Third party imports
 import mysql.connector
 
+# Local application imports
+import settings
+
 class DatabaseConnector:
     def __init__(self):
         self.__connect()
@@ -12,9 +15,9 @@ class DatabaseConnector:
     def __connect(self):
         try:
             self.cnx = mysql.connector.connect( host = '127.0.0.1',
-                                user = 'root', 
-                                password = 'root',
-                                database = 'dbms')
+                                user = settings.user, 
+                                password = settings.password,
+                                database = settings.database)
             self.cursor = self.cnx.cursor()
         except mysql.connector.Error as e:
                 print(e)

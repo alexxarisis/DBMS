@@ -1,16 +1,11 @@
+# Standard library imports
 from os import getcwd
 from os.path import join
 from pathlib import Path
 
-class FileInformant:
+class PathFinder():
     def __init__(self):
-        self.__getCsvFileNames()
         self.__getInputOutputDirectories()
-        
-    def __getCsvFileNames(self):
-        self.countriesCsv = 'countries.csv'
-        self.statsCsv = 'stats.csv'
-        self.indicatorsCsv = 'indicators.csv'
 
     def __getInputOutputDirectories(self):
         # Get to csv's directory

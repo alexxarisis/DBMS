@@ -7,24 +7,25 @@ import pandas as pd
 
 # Local application imports
 from dataload.databaseCreator import DBCreator
+import settings
 
-def runTests(fileInfo):
-    DBCreator(fileInfo).createDB()
+def runTests(pathFinder):
+    DBCreator(pathFinder).createDB()
     
     cnx, cursor = connect()
     tablesCreatedTest(cursor)
     countriesTableTest(cursor)
     indicatorsTableTest(cursor)
-    statsTableTest(fileInfo, cursor)
+    statsTableTest(pathFinder, cursor)
 
     cnx.close()
 
 def connect():
     try:
         cnx = mysql.connector.connect( host = '127.0.0.1',
-                            user = 'root', 
-                            password = 'root',
-                            database = 'dbms')
+                                user = settings.user, 
+                                password = settings.password,
+                                database = settings.database)
         cursor = cnx.cursor()
     except mysql.connector.Error as e:
             print(e)
@@ -39,8 +40,8 @@ def tablesCreatedTest(cursor):
 def findTable(cursor, tablename):
     cursor.execute(
             "SELECT count(*) FROM information_schema.tables "
-            "WHERE table_schema = 'dbms' AND "
-            "table_name = '%s'" % tablename)
+            "WHERE table_schema = '%s' AND "
+            "table_name = '%s'" % (settings.database, tablename))
     return cursor.fetchone()[0]
 
 def countriesTableTest(cursor):
@@ -55,8 +56,8 @@ def indicatorsTableTest(cursor):
     columnHeaders = getTableColumnNames(cursor, 'indicators')
     assert columnHeaders == expectedColumnHeaders, 'DBCreator: Indicators table has wrong column names'
 
-def statsTableTest(fileInfo, cursor):
-    statsCsv = pd.read_csv(join(fileInfo.outputDir, fileInfo.statsCsv))
+def statsTableTest(pathFinder, cursor):
+    statsCsv = pd.read_csv(join(pathFinder.outputDir, settings.statsCsv))
     expectedColumnHeaders = [str(x).lower().replace('.', '_').replace(' ', '_') for x in statsCsv.columns]
     columnHeaders = getTableColumnNames(cursor, 'stats')
     assert columnHeaders == expectedColumnHeaders, 'DBCreator: Stats table has wrong column names'
