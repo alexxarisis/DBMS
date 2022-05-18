@@ -35,7 +35,8 @@ class DBCreator:
 
     def __createDatabase(self):
         print('\tCreating database...', end=' ')
-        self.__executeQuery('CREATE DATABASE IF NOT EXISTS %s' % settings.database)
+        self.__executeQuery('DROP DATABASE IF EXISTS %s' % settings.database)
+        self.__executeQuery('CREATE DATABASE %s' % settings.database)
         self.__executeQuery('USE %s' % settings.database)
         print('Done')
 
