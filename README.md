@@ -54,7 +54,7 @@ There are 3 kinds of plots, each working under different conditions (for k,k'>0)
 3. Extract it into 3 files and save each on the corresponding folder in "../DBMS/data/original/":
     1. "countries/"
     2. "indicators/"
-    3. "stats"
+    3. "stats/"
 4. The new files will be loaded along with the old ones when the app is run.
 
 ## Credits
